@@ -1,5 +1,7 @@
 package com.kp.controller;
 
+import java.util.logging.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,33 +14,30 @@ import com.kp.request.binding.Cab;
 import com.kp.response.binding.CabBookingConfirmation;
 import com.kp.service.CabBookingService;
 
+
 @RestController
 @RequestMapping("/cab")
 public class CabBookingController {
 	@Autowired
 	CabBookingService cabService ;
 	
-	
+    public static final Logger logger = Logger.getLogger(CabBookingController.class.getName(), null);
+    		
 	@PostMapping(value="/book",
 			produces={"application/xml", "application/json"},
 			consumes={"application/xml", "application/json"}
 	)
 	public ResponseEntity<CabBookingConfirmation> bookACab(@RequestBody Cab cab){
-		System.out.println("Cab Data:" + cab);
-		String availability = cab.getAvailability();
-		CabBookingConfirmation booking = new CabBookingConfirmation();
+		final String availability = cab.getAvailability();	
+		CabBookingConfirmation booking = null;
 		if(availability.equals("available")) {
-			Double fare = cabService.calculateFare(cab.getDistanceInKM());
-			booking.setCabID(cab.getCabID());
-			booking.setDeparturePlace(cab.getDeparturePlace());
-			booking.setDestinationPlace(cab.getDestinationPlace());
-			booking.setFare(fare);
-			booking.setBookingStatus("Cab booked Successfully");
+			booking = cabService.setResponseData(cab);
+			logger.info("Cab booked Successfully");
 		}
 		else {
-			System.out.println("Cab is not available");
+			logger.info("Not added Cab is not available");
 		}		
-		return new ResponseEntity<CabBookingConfirmation>(booking, HttpStatus.OK);
+		return new ResponseEntity<>(booking, HttpStatus.OK);
 	}
 
 }

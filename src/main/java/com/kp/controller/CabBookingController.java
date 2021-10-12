@@ -21,7 +21,7 @@ public class CabBookingController {
 	@Autowired
 	CabBookingService cabService ;
 	
-    public static final Logger logger = Logger.getLogger(CabBookingController.class.getName(), null);
+    public static final Logger logger = Logger.getLogger(CabBookingController.class.getName());
     		
 	@PostMapping(value="/book",
 			produces={"application/xml", "application/json"},

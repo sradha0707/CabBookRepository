@@ -35,7 +35,7 @@ public class CabBookingController {
 			logger.info("Cab booked Successfully");
 		}
 		else {
-			logger.info("Not added Cab is not available");
+			logger.info("Not added, Cab is not available");
 		}		
 		return new ResponseEntity<>(booking, HttpStatus.OK);
 	}
